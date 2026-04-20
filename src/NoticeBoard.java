@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -78,17 +79,15 @@ public class NoticeBoard {
     {
         if(!mode) {
             // Quote[]
-            for (int i = 1; i <= max_idx; i++) {
+            for (int i = max_idx; i >=0; i--) {
                 if (list[i] != null)
                     list[i].printInfo();
             }
         }
         else {
             // List<Quote>
-            for(Quote quo : otherList)
-            {
-                quo.printInfo();
-            }
+            for(int i=otherList.size()-1; i>=0;i--)
+                otherList.get(i).printInfo();
         }
     }
 
