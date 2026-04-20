@@ -1,34 +1,50 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class NoticeBoard {
     private int max_idx;
     private Quote[] list;
+    private List<Quote> otherList;
     private Scanner sc;
-
+    private boolean mode;
     NoticeBoard()
     {
+        this.mode = true;
         this.max_idx = 0;
-        this.list = new Quote[101];
+        if(mode)
+            this.otherList = new ArrayList<Quote>();
+        else
+            this.list = new Quote[101];
         this.sc = new Scanner(System.in);
     }
+
     private boolean isInHere(int idx)
     {
-        if( !(0 <= idx && idx <=list.length) )
+        boolean check = true;
+        if(mode)
         {
-            System.out.println(idx + "번 명언은 존재하지 않습니다.");
-            return false;
+            Quote dummy = new Quote(idx, "");
+            if(otherList.contains(dummy)) check =  true;
+            else check = false;
         }
-        if(list[idx] == null)
-        {
-            System.out.println(idx + "번 명언은 존재하지 않습니다.");
-            return false;
+        else {
+            if (!(0 <= idx && idx <= list.length)) {
+                System.out.println(idx + "번 명언은 존재하지 않습니다.");
+                check = false;
+            }
+            if (list[idx] == null) {
+                System.out.println(idx + "번 명언은 존재하지 않습니다.");
+                check = false;
+            }
         }
-        return true;
+        if(!check)System.out.println(idx + "번 명언은 존재하지 않습니다.");
+        return check;
     }
     private void regist()
     {
         //일단 이렇게 확장
-        if(max_idx+1 >= this.list.length)
+        if(!mode && max_idx+1 >= this.list.length)
         {
             Quote[] dummy = new Quote[max_idx*100];
             System.arraycopy(this.list,0, dummy, 0, this.list.length);
@@ -44,40 +60,59 @@ public class NoticeBoard {
         max_idx++;
         System.out.println(max_idx + "번 명언이 등록되었습니다.");
         Quote quo = new Quote(max_idx, author, context);
-        this.list[max_idx] = quo;
+        if(!mode)
+            this.list[max_idx] = quo;
+        else
+            this.otherList.add(quo);
     }
 
     private void delete(int idx)
     {
         if(!isInHere(idx))return;
-        list[idx] = null;
+        if(!mode)list[idx] = null;
+        else otherList.remove(new Quote(idx, ""));
         System.out.println(idx + "번 명언이 삭제되었습니다.");
     }
 
     private void print()
     {
-        for(int i=1; i<=max_idx; i++)
-        {
-            if(list[i] != null)
-                list[i].printInfo();
+        if(!mode) {
+            // Quote[]
+            for (int i = 1; i <= max_idx; i++) {
+                if (list[i] != null)
+                    list[i].printInfo();
+            }
+        }
+        else {
+            // List<Quote>
+            for(Quote quo : otherList)
+            {
+                quo.printInfo();
+            }
         }
     }
 
     private void modify(int idx)
     {
         if(!isInHere(idx))return;
-        String beforeContext = list[idx].getContent();
-        System.out.println("명언(기존) : " + beforeContext);
+        Quote dummy = new Quote(idx, "");
+        if(mode)
+            dummy = otherList.get(otherList.indexOf((dummy)));
+        else
+            dummy = list[idx];
+
+        String beforeContent = dummy.getContent();
+        System.out.println("명언(기존) : " + beforeContent);
         System.out.print("명언 : ");
         String afterContext =sc.nextLine().trim();
 
-        String beforeAuthor = list[idx].getAuthor();
+        String beforeAuthor = dummy.getAuthor();
         System.out.println("작가(기존) : " + beforeAuthor);
         System.out.print("작가 : ");
         String afterAuthor = sc.nextLine().trim();
 
-        list[idx].setContext(afterContext);
-        list[idx].setAuthor(afterAuthor);
+        dummy.setContext(afterContext);
+        dummy.setAuthor(afterAuthor);
     }
 
     void loop()

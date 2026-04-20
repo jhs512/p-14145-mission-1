@@ -1,3 +1,5 @@
+import java.util.Objects;
+
 public class Quote {
     private int idx;
     private String author;
@@ -22,5 +24,18 @@ public class Quote {
     void printInfo()
     {
         System.out.println(this.idx + " / " + this.author + " / " + this.content);
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(this==o)return true;
+        if(o == null || getClass() != o.getClass()) return false;
+        Quote dummy = (Quote) o;
+        return idx == ((Quote) o).getIdx();
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(idx); // equals에서 쓴 필드를 그대로 사용
     }
 }
