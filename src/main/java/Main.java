@@ -102,3 +102,4 @@ public class Main {
         sc.close();
     }
 }
+// 배열 버전
