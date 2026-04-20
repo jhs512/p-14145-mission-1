@@ -73,7 +73,7 @@ public class Main {
                             m.put("author", author);
                             list.remove(editNumber - 1);
                             list.add(editNumber - 1, m);
-                            System.out.println(editNumber + "번 명언이 수정되었습니다..");
+                            System.out.println(editNumber + "번 명언이 수정되었습니다.");
                         } else {
                             System.out.println(editNumber + "번 명언은 존재하지 않습니다.");
                         }
